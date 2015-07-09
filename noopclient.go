@@ -34,6 +34,11 @@ func (s NoopClient) Timing(stat string, count int64) error {
 	return nil
 }
 
+// TimeThisFunction - Track a  function
+func (c *StatsdClient) TimeThisFunction(d time.Time) error {
+	return nil
+}
+
 // PrecisionTiming does nothing
 func (s NoopClient) PrecisionTiming(stat string, delta time.Duration) error {
 	return nil

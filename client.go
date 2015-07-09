@@ -93,6 +93,18 @@ func (c *StatsdClient) Timing(stat string, delta int64) error {
 	return c.send(stat, "%d|ms", delta)
 }
 
+// TimeThisFunction - Track a  function
+func (c *StatsdClient) TimeThisFunction(d time.Time) error {
+	fnName := "<unknown>"
+	// Skip this function, and fetch the PC and file for its parent
+	pc, _, _, ok := runtime.Caller(1)
+	if ok {
+		fnName = runtime.FuncForPC(pc).Name()
+	}
+
+	return c.Timing(fmt.Sprintf("TTF : %s", fnName), time.Since(d)/1000000)
+}
+
 // PrecisionTiming - Track a duration event
 // the time delta has to be a duration
 func (c *StatsdClient) PrecisionTiming(stat string, delta time.Duration) error {

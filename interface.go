@@ -9,6 +9,7 @@ type Statsd interface {
 	Incr(stat string, count int64) error
 	Decr(stat string, count int64) error
 	Timing(stat string, delta int64) error
+	TimeThisFunction(d time.Time) error
 	PrecisionTiming(stat string, delta time.Duration) error
 	Gauge(stat string, value int64) error
 	GaugeDelta(stat string, value int64) error
