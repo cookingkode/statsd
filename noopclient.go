@@ -35,7 +35,7 @@ func (s NoopClient) Timing(stat string, count int64) error {
 }
 
 // TimeThisFunction - Track a  function
-func (c *StatsdClient) TimeThisFunction(d time.Time) error {
+func (s NoopClient) TimeThisFunction(d time.Time) error {
 	return nil
 }
 

@@ -5,6 +5,8 @@ import (
 	"os"
 	"strings"
 	"time"
+        "fmt"
+        "runtime"
 
 	"github.com/quipo/statsd/event"
 )
@@ -76,7 +78,7 @@ func (sb *StatsdBuffer) TimeThisFunction(d time.Time) error {
 		fnName = runtime.FuncForPC(pc).Name()
 	}
 
-	return sb.Timing(fmt.Sprintf("TTF : %s", fnName), time.Since(d)/1000000)
+	return sb.Timing(fmt.Sprintf("TTF : %s", fnName), int64(time.Since(d)/1000000))
 }
 
 // PrecisionTiming - Track a duration event
