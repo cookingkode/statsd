@@ -5,9 +5,9 @@ import (
 	"log"
 	"net"
 	"os"
+	"runtime"
 	"strings"
 	"time"
-        "runtime"
 
 	"github.com/quipo/statsd/event"
 )
@@ -52,9 +52,19 @@ func (c *StatsdClient) String() string {
 }
 
 // CreateSocket creates a UDP connection to a StatsD server
+func (c *StatsdClient) CreateSocketIfNil() error {
+	if c.conn != nil {
+		return nil
+	}
+	return c.CreateSocket()
+
+}
+
+// CreateSocket creates a UDP connection to a StatsD server
 func (c *StatsdClient) CreateSocket() error {
 	conn, err := net.DialTimeout("udp", c.addr, 5*time.Second)
 	if err != nil {
+                conn = nil
 		return err
 	}
 	c.conn = conn

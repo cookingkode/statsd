@@ -1,12 +1,13 @@
 package statsd
 
 import (
+	"fmt"
 	"log"
 	"os"
+	"runtime"
 	"strings"
 	"time"
-        "fmt"
-        "runtime"
+        "bufio"
 
 	"github.com/quipo/statsd/event"
 )
@@ -26,10 +27,15 @@ type StatsdBuffer struct {
 	events        map[string]event.Event
 	closeChannel  chan closeRequest
 	Logger        Logger
+        localStats *bufio.Writer
 }
 
 // NewStatsdBuffer Factory
 func NewStatsdBuffer(interval time.Duration, client *StatsdClient) *StatsdBuffer {
+        f, err := os.Create("/tmp/stats.dat")
+        if err != nil {
+            panic(err)
+        }
 	sb := &StatsdBuffer{
 		flushInterval: interval,
 		statsd:        client,
@@ -37,6 +43,8 @@ func NewStatsdBuffer(interval time.Duration, client *StatsdClient) *StatsdBuffer
 		events:        make(map[string]event.Event, 0),
 		closeChannel:  make(chan closeRequest, 0),
 		Logger:        log.New(os.Stdout, "[BufferedStatsdClient] ", log.Ldate|log.Ltime),
+                localStats : bufio.NewWriter(f),
+                
 	}
 	go sb.collector()
 	return sb
@@ -196,11 +204,13 @@ func (sb *StatsdBuffer) flush() (err error) {
 	if n == 0 {
 		return nil
 	}
-	err = sb.statsd.CreateSocket()
+	err = sb.statsd.CreateSocketIfNil()
 	if nil != err {
 		sb.Logger.Println("Error establishing UDP connection for sending statsd events:", err)
 	}
 	for k, v := range sb.events {
+                sb.localStats.WriteString(v.String())
+                sb.localStats.Flush()
 		err := sb.statsd.SendEvent(v)
 		if nil != err {
 			sb.Logger.Println(err)
