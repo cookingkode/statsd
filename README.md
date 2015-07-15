@@ -71,16 +71,3 @@ func aFunction(){
 
 The string "%HOST%" in the metric name will automatically be replaced with the hostname of the server the event is sent from.
 
-
-## Author
-
-Lorenzo Alberton
-
-* Web: [http://alberton.info](http://alberton.info)
-* Twitter: [@lorenzoalberton](https://twitter.com/lorenzoalberton)
-* Linkedin: [/in/lorenzoalberton](https://www.linkedin.com/in/lorenzoalberton)
-
-
-## Copyright
-
-See [LICENSE](LICENSE) document
