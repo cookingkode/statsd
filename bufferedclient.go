@@ -31,8 +31,8 @@ type StatsdBuffer struct {
 }
 
 // NewStatsdBuffer Factory
-func NewStatsdBuffer(interval time.Duration, client *StatsdClient) *StatsdBuffer {
-        f, err := os.Create("/tmp/stats.dat")
+func NewStatsdBuffer(interval time.Duration, client *StatsdClient, localFilePath string) *StatsdBuffer {
+        f, err := os.Create(localFilePath)
         if err != nil {
             panic(err)
         }

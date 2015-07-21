@@ -50,7 +50,7 @@ func main() {
 	statsdclient := statsd.NewStatsdClient("localhost:8125", prefix)
 	statsdclient.CreateSocket()
 	interval := time.Second * 2 // aggregate stats and flush every 2 seconds
-	stats = statsd.NewStatsdBuffer(interval, statsdclient)
+	stats = statsd.NewStatsdBuffer(interval, statsdclient, "/var/log/local.stats")
 	defer stats.Close()
 
 	// not buffered: send immediately
